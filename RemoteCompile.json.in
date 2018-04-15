@@ -1,0 +1,11 @@
+{
+    \"Name\" : \"RemoteCompile\",
+    \"Version\" : \"0.0.1\",
+    \"CompatVersion\" : \"0.0.1\",
+    \"Vendor\" : \"sodgeIT\",
+    \"Copyright\" : \"(C) sodgeIT\",
+    \"License\" : \"LGPL\",
+    \"Description\" : \"Compile on a remote host\",
+    \"Url\" : \"http://www.sodgeit.de\",
+    $$dependencyList
+}

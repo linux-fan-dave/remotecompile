@@ -1,0 +1,9 @@
+#pragma once
+
+#include <QtGlobal>
+
+#if defined(REMOTECOMPILE_LIBRARY)
+#  define REMOTECOMPILESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define REMOTECOMPILESHARED_EXPORT Q_DECL_IMPORT
+#endif
