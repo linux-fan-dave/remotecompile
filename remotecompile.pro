@@ -1,17 +1,32 @@
 DEFINES += REMOTECOMPILE_LIBRARY
 
+QT += network
+
 # RemoteCompile files
 
 SOURCES += \
-        remotecompileplugin.cpp
+        remotecompileplugin.cpp \
+    options/filemappingoptions.cpp \
+    options/filemappingoptionsform.cpp \
+    options/remotesystemoptions.cpp \
+    options/remotesystemoptionsform.cpp \
+    remotecompilermanager.cpp
 
 HEADERS += \
         remotecompileplugin.h \
         remotecompile_global.h \
-        remotecompileconstants.h
+        remotecompileconstants.h \
+    options/filemappingoptions.h \
+    options/filemappingoptionsform.h \
+    options/remotesystemoptions.h \
+    options/remotesystemoptionsform.h \
+    remotecompilermanager.h
 
 OTHER_FILES += \
     RemoteCompile.json.in
+
+
+INCLUDEPATH += $$PWD
 
 # Qt Creator linking
 
@@ -42,7 +57,8 @@ QTC_LIB_DEPENDS += \
     # nothing here at this time
 
 QTC_PLUGIN_DEPENDS += \
-    coreplugin
+    coreplugin \
+    projectexplorer
 
 QTC_PLUGIN_RECOMMENDS += \
     # optional plugin dependencies. nothing here at this time
@@ -50,3 +66,7 @@ QTC_PLUGIN_RECOMMENDS += \
 ###### End _dependencies.pri contents ######
 
 include($$IDE_SOURCE_TREE/src/qtcreatorplugin.pri)
+
+FORMS += \
+    options/filemappingoptionsform.ui \
+    options/remotesystemoptionsform.ui

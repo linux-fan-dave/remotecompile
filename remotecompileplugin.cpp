@@ -13,6 +13,9 @@
 #include <QMainWindow>
 #include <QMenu>
 
+#include "options/filemappingoptions.h"
+#include "options/remotesystemoptions.h"
+
 namespace RemoteCompile {
 namespace Internal {
 
@@ -50,6 +53,9 @@ bool RemoteCompilePlugin::initialize(const QStringList &arguments, QString *erro
     menu->addAction(cmd);
     Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
 
+    addAutoReleasedObject(new Options::Internal::RemoteSystemOptions);
+    addAutoReleasedObject(new Options::Internal::FileMappingOptions);
+
     return true;
 }
 
@@ -62,7 +68,7 @@ void RemoteCompilePlugin::extensionsInitialized()
 
 ExtensionSystem::IPlugin::ShutdownFlag RemoteCompilePlugin::aboutToShutdown()
 {
-    // Save settings
+    // Save tu
     // Disconnect from signals that are not needed during shutdown
     // Hide UI (if you add UI that is not in the main window directly)
     return SynchronousShutdown;
