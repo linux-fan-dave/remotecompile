@@ -13,5 +13,7 @@ const char FILEMAPPING_OPTIONS_CATEGORY_ICON[] = ":resources/Icon.png";
 const char FILEMAPPING_OPTIONS_CATEGORY_TR_CATEGORY[] =
     QT_TRANSLATE_NOOP("Remote Compile", "Remote Compile");
 
+const char TOOLCHAIN_ID[] = "RemoteCompile.ToolChain";
+const char INNERTOOLCHAIN_ID[] = "RemoteCompile.InnerToolChain";
 } // namespace RemoteCompile
 } // namespace Constants

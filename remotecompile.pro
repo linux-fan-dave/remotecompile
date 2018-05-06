@@ -10,7 +10,9 @@ SOURCES += \
     options/filemappingoptionsform.cpp \
     options/remotesystemoptions.cpp \
     options/remotesystemoptionsform.cpp \
-    remotecompilermanager.cpp
+    remotecompilermanager.cpp \
+    remotecompilertoolchainfactory.cpp \
+    remotecompiletoolchain.cpp
 
 HEADERS += \
         remotecompileplugin.h \
@@ -20,7 +22,9 @@ HEADERS += \
     options/filemappingoptionsform.h \
     options/remotesystemoptions.h \
     options/remotesystemoptionsform.h \
-    remotecompilermanager.h
+    remotecompilermanager.h \
+    remotecompilertoolchainfactory.h \
+    remotecompiletoolchain.h
 
 OTHER_FILES += \
     RemoteCompile.json.in

@@ -5,9 +5,12 @@
 
 namespace RemoteCompile {
 
-class RemoteCompilerManager
+class RemoteCompilerManager : public QObject
 {
+    Q_OBJECT
 public:
+    static RemoteCompilerManager* instance();
+private:
     RemoteCompilerManager();
 };
 

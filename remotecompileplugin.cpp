@@ -20,6 +20,7 @@ namespace RemoteCompile {
 namespace Internal {
 
 RemoteCompilePlugin::RemoteCompilePlugin()
+    :m_remoteCompilerToolChainFactory()
 {
     // Create your members
 }

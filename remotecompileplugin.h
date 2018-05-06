@@ -4,6 +4,8 @@
 
 #include <extensionsystem/iplugin.h>
 
+#include "remotecompilertoolchainfactory.h"
+
 namespace RemoteCompile {
 namespace Internal {
 
@@ -22,6 +24,7 @@ public:
 
 private:
     void triggerAction();
+    RemoteCompilerToolChainFactory m_remoteCompilerToolChainFactory;
 };
 
 } // namespace Internal
