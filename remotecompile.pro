@@ -12,7 +12,9 @@ SOURCES += \
     options/remotesystemoptionsform.cpp \
     remotecompilermanager.cpp \
     remotecompilertoolchainfactory.cpp \
-    remotecompiletoolchain.cpp
+    remotecompiletoolchain.cpp \
+    remotecompilermanagermodel.cpp \
+    remotecompiler.cpp
 
 HEADERS += \
         remotecompileplugin.h \
@@ -24,7 +26,9 @@ HEADERS += \
     options/remotesystemoptionsform.h \
     remotecompilermanager.h \
     remotecompilertoolchainfactory.h \
-    remotecompiletoolchain.h
+    remotecompiletoolchain.h \
+    remotecompilermanagermodel.h \
+    remotecompiler.h
 
 OTHER_FILES += \
     RemoteCompile.json.in

@@ -2,6 +2,8 @@
 #define REMOTECOMPILERMANAGER_H
 
 #include <QObject>
+#include <QList>
+#include "remotecompiler.h"
 
 namespace RemoteCompile {
 
@@ -12,6 +14,14 @@ public:
     static RemoteCompilerManager* instance();
 private:
     RemoteCompilerManager();
+public:
+    int remoteCompilerCount() const;
+    void addRemoteCompiler(RemoteCompiler* remoteCompiler);
+    RemoteCompiler* remoteCompilerAt(int idx);
+private:
+    typedef QList<RemoteCompiler*> RemoteCompilerList;
+    RemoteCompilerList m_remoteCompiler;
+
 };
 
 }
