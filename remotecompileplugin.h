@@ -3,11 +3,11 @@
 #include "remotecompile_global.h"
 
 #include <extensionsystem/iplugin.h>
-
-#include "remotecompilertoolchainfactory.h"
+#include <memory>
 
 namespace RemoteCompile {
 namespace Internal {
+class RemoteCompilePluginPrivate;
 
 class RemoteCompilePlugin : public ExtensionSystem::IPlugin
 {
@@ -24,7 +24,7 @@ public:
 
 private:
     void triggerAction();
-    RemoteCompilerToolChainFactory m_remoteCompilerToolChainFactory;
+    std::shared_ptr<RemoteCompilePluginPrivate> d;
 };
 
 } // namespace Internal

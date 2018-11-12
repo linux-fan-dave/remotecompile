@@ -15,12 +15,20 @@
 
 #include "options/filemappingoptions.h"
 #include "options/remotesystemoptions.h"
+#include "remotecompilertoolchainfactory.h"
 
 namespace RemoteCompile {
 namespace Internal {
 
+class RemoteCompilePluginPrivate {
+public:
+    Options::Internal::RemoteSystemOptions remoteSystemOptions;
+    Options::Internal::FileMappingOptions fileMappingOptions;
+    RemoteCompilerToolChainFactory m_remoteCompilerToolChainFactory;
+};
+
 RemoteCompilePlugin::RemoteCompilePlugin()
-    :m_remoteCompilerToolChainFactory()
+    :d()
 {
     // Create your members
 }
@@ -53,10 +61,7 @@ bool RemoteCompilePlugin::initialize(const QStringList &arguments, QString *erro
     menu->menu()->setTitle(tr("RemoteCompile"));
     menu->addAction(cmd);
     Core::ActionManager::actionContainer(Core::Constants::M_TOOLS)->addMenu(menu);
-
-    addAutoReleasedObject(new Options::Internal::RemoteSystemOptions);
-    addAutoReleasedObject(new Options::Internal::FileMappingOptions);
-
+    d = std::make_shared<RemoteCompilePluginPrivate>();
     return true;
 }
 
