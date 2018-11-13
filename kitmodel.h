@@ -23,7 +23,13 @@ public:
     explicit KitModel(QObject *parent = nullptr);
 
     void addNewRemoteKit();
+
+    ProjectExplorer::Kit *selectedKit() const;
+    int selectedKitIdx() const { return m_selectedKitIndex; }
+    void setSelectedKit(const QModelIndex& idx);
+    void setSelectedKit(int idx);
 signals:
+    void selectedKitChanged();
 
 public slots:
 
@@ -34,6 +40,7 @@ public:
 
 private:
     ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;
+    int m_selectedKitIndex;
 };
 
 }

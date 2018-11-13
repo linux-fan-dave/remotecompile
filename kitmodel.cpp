@@ -8,10 +8,13 @@ namespace Internal {
 
 KitModel::KitModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_selectedKitIndex(0)
 {
     connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitsChanged, [=](){
+       int oldIdx = m_selectedKitIndex;
        this->beginResetModel();
        this->endResetModel();
+       this->setSelectedKit(oldIdx);
     });
 }
 
@@ -46,6 +49,25 @@ ProjectExplorer::Kit *KitModel::kitFromIndex(const QModelIndex &index) const
     }
     return kit;
 }
+
+ProjectExplorer::Kit *KitModel::selectedKit() const
+{
+    return kitFromIndex(index(m_selectedKitIndex));
+}
+
+void KitModel::setSelectedKit(const QModelIndex &idx)
+{
+    setSelectedKit(idx.row());
+}
+
+void KitModel::setSelectedKit(int idx)
+{
+    if(m_selectedKitIndex != idx) {
+        m_selectedKitIndex = idx;
+        selectedKitChanged();
+    }
+}
+
 
 QVariant KitModel::data(const QModelIndex &index, int role) const
 {

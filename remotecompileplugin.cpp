@@ -23,7 +23,6 @@ namespace Internal {
 class RemoteCompilePluginPrivate {
 public:
     Options::Internal::RemoteSystemOptions remoteSystemOptions;
-    Options::Internal::FileMappingOptions fileMappingOptions;
     RemoteCompilerToolChainFactory m_remoteCompilerToolChainFactory;
 };
 
