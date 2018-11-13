@@ -2,6 +2,8 @@
 #define REMOTESYSTEMOPTIONSFORM_H
 
 #include <QWidget>
+#include <remotekitfiltermodel.h>
+#include <memory>
 
 namespace ProjectExplorer {
     class DeviceManagerModel;
@@ -21,12 +23,13 @@ class RemoteSystemOptionsForm : public QWidget
     Q_OBJECT
 
 public:
-    explicit RemoteSystemOptionsForm(QWidget *parent = 0);
+    explicit RemoteSystemOptionsForm(QWidget *parent = nullptr);
     ~RemoteSystemOptionsForm();
 
 private:
     Ui::RemoteSystemOptionsForm *ui;
-    ProjectExplorer::DeviceManagerModel* m_deviceModel;
+    std::shared_ptr<ProjectExplorer::DeviceManagerModel> m_deviceModel;
+    std::shared_ptr<RemoteCompile::Internal::RemoteKitFilterModel> m_kitModel;
 };
 
 }

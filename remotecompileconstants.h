@@ -15,5 +15,8 @@ const char FILEMAPPING_OPTIONS_CATEGORY_TR_CATEGORY[] =
 
 const char TOOLCHAIN_ID[] = "RemoteCompile.ToolChain";
 const char INNERTOOLCHAIN_ID[] = "RemoteCompile.InnerToolChain";
+
+const char KIT_IS_REMOTE_ID[] = "RemoteCompile.IsRemote";
+
 } // namespace RemoteCompile
 } // namespace Constants

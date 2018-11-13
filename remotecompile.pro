@@ -14,7 +14,9 @@ SOURCES += \
     remotecompilertoolchainfactory.cpp \
     remotecompiletoolchain.cpp \
     remotecompilermanagermodel.cpp \
-    remotecompiler.cpp
+    remotecompiler.cpp \
+    kitmodel.cpp \
+    remotekitfiltermodel.cpp
 
 HEADERS += \
         remotecompileplugin.h \
@@ -28,7 +30,9 @@ HEADERS += \
     remotecompilertoolchainfactory.h \
     remotecompiletoolchain.h \
     remotecompilermanagermodel.h \
-    remotecompiler.h
+    remotecompiler.h \
+    kitmodel.h \
+    remotekitfiltermodel.h
 
 OTHER_FILES += \
     RemoteCompile.json.in
