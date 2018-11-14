@@ -10,6 +10,7 @@ RemoteKitFilterModel::RemoteKitFilterModel(QObject *parent)
     , m_kitModel(new KitModel(this))
 {
     setSourceModel(m_kitModel.get());
+    connect(m_kitModel.get(), &KitModel::selectedKitIdxChanged, this, &RemoteKitFilterModel::selectedKitChanged);
 }
 
 bool RemoteKitFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
@@ -20,6 +21,16 @@ bool RemoteKitFilterModel::filterAcceptsRow(int source_row, const QModelIndex &s
 KitModel &RemoteKitFilterModel::kitModel() const
 {
     return *m_kitModel;
+}
+
+QModelIndex RemoteKitFilterModel::selectedKitIdx() const
+{
+    return mapFromSource(m_kitModel->selectedKitIdx());
+}
+
+void RemoteKitFilterModel::setSelectedKitIdx(const QModelIndex &idx)
+{
+    m_kitModel->setSelectedKitIdx(mapToSource(idx));
 }
 
 }

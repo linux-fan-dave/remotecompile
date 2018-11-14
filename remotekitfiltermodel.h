@@ -17,7 +17,11 @@ public:
 
     KitModel& kitModel() const;
 
+    QModelIndex selectedKitIdx() const;
+    void setSelectedKitIdx(const QModelIndex& idx);
+
 signals:
+    void selectedKitChanged();
 
 public slots:
 

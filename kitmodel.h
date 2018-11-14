@@ -16,20 +16,22 @@ class KitModel : public QAbstractListModel
     Q_OBJECT    
 public:
     enum DataRole {
-        DataRole_IsRemoteRole = Qt::UserRole + 1
+        DataRole_IsRemoteRole = Qt::UserRole + 1,
+        DataRole_Kit
     };
     Q_ENUM(DataRole)
 
     explicit KitModel(QObject *parent = nullptr);
 
     void addNewRemoteKit();
+    void deleteSelectedKit();
 
+    QModelIndex selectedKitIdx() const { return m_selectedKitIdx; }
+    void setSelectedKitIdx(const QModelIndex& idx);
     ProjectExplorer::Kit *selectedKit() const;
-    int selectedKitIdx() const { return m_selectedKitIndex; }
-    void setSelectedKit(const QModelIndex& idx);
-    void setSelectedKit(int idx);
+
 signals:
-    void selectedKitChanged();
+    void selectedKitIdxChanged();
 
 public slots:
 
@@ -40,7 +42,7 @@ public:
 
 private:
     ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;
-    int m_selectedKitIndex;
+    QModelIndex m_selectedKitIdx;
 };
 
 }

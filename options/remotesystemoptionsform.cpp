@@ -10,6 +10,14 @@ namespace  Options {
 namespace Internal {
 
 
+void RemoteSystemOptionsForm::handleSelectedKitChanged()
+{
+    ui->cb_Kits->setCurrentIndex(m_kitModel->selectedKitIdx().row());
+    bool hasKit = m_kitModel->selectedKitIdx().isValid();
+    ui->pb_Delete->setEnabled(hasKit);
+    ui->wg_ClientArea->setEnabled(hasKit);
+}
+
 RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RemoteSystemOptionsForm),
@@ -18,20 +26,24 @@ RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->cb_Kits->setModel(m_kitModel.get());
-    ui->comboBox->setModel(m_deviceModel.get());
+    //ui->comboBox->setModel(m_deviceModel.get());
 
-    ui->cb_Kits->setCurrentIndex(m_kitModel->kitModel().selectedKitIdx());
+    handleSelectedKitChanged();
 
-    connect(&(m_kitModel->kitModel()), &RemoteCompile::Internal::KitModel::selectedKitChanged, [=](){
-       ui->cb_Kits->setCurrentIndex(m_kitModel->kitModel().selectedKitIdx());
+    connect(&(m_kitModel->kitModel()), &RemoteCompile::Internal::KitModel::selectedKitIdxChanged, [=](){
+           handleSelectedKitChanged();
     });
 
     connect(ui->cb_Kits, &QComboBox::currentTextChanged, [=](){
-        m_kitModel->kitModel().setSelectedKit(ui->cb_Kits->currentIndex());
+        m_kitModel->setSelectedKitIdx(m_kitModel->index(ui->cb_Kits->currentIndex(), 0));
     });
 
     connect(ui->pb_Add, &QPushButton::clicked, [=]() {
         m_kitModel->kitModel().addNewRemoteKit();
+    });
+
+    connect(ui->pb_Delete, &QPushButton::clicked, [=](){
+       m_kitModel->kitModel().deleteSelectedKit();
     });
 }
 
