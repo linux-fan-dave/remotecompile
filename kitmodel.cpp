@@ -11,10 +11,13 @@ KitModel::KitModel(QObject *parent)
     , m_selectedKitIdx()
 {
     connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitsChanged, [=](){
-       int oldIdx = m_selectedKitIdx.row();
-       this->beginResetModel();
-       this->endResetModel();
-       this->setSelectedKitIdx(index(oldIdx, 0));
+        int oldIdx = m_selectedKitIdx.row();
+        this->beginResetModel();
+        this->endResetModel();
+        if(oldIdx < 0 && rowCount(QModelIndex()) > 0) {
+            oldIdx = 0;
+        }
+        this->setSelectedKitIdx(index(oldIdx, 0));
     });
 }
 
@@ -25,7 +28,7 @@ void KitModel::addNewRemoteKit()
     kit->setAutoDetected(true);
     kit->setAutoDetectionSource("remoteCompilerPlugin");
     kit->makeSticky();
-    kit->setUnexpandedDisplayName("RemoteCompilerKit");
+    kit->setUnexpandedDisplayName(findUnusedName("RemoteCompilerKit"));
     ProjectExplorer::KitManager::instance()->registerKit(kit);
 }
 
@@ -53,6 +56,36 @@ ProjectExplorer::Kit *KitModel::kitFromIndex(const QModelIndex &index) const
         QList<ProjectExplorer::Kit*> kitList =  ProjectExplorer::KitManager::instance()->kits();
         if(index.row() <= kitList.size()) {
             kit = kitList[index.row()];
+        }
+    }
+    return kit;
+}
+
+QString KitModel::findUnusedName(const QString &prefix)
+{
+    QString retval;
+    for(int i = 0; /* infinite loop */ ; ++i) {
+        if(i == 0) {
+            retval = prefix;
+        } else {
+            retval = QString("%1_%2").arg(prefix).arg(i);
+        }
+        if(!kitByName(retval)) {
+            break;
+        }
+    }
+    return retval;
+}
+
+ProjectExplorer::Kit *KitModel::kitByName(const QString &name)
+{
+    ProjectExplorer::Kit* kit = nullptr;
+    const int rowCnt = rowCount(QModelIndex());
+    for(int i = 0; i < rowCnt; ++i) {
+        QModelIndex idx = index(i, 0);
+        if(idx.data().toString() == name) {
+            kit = kitFromIndex(idx);
+            break;
         }
     }
     return kit;

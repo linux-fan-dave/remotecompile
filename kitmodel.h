@@ -42,6 +42,8 @@ public:
 
 private:
     ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;
+    QString findUnusedName(const QString& prefix);
+    ProjectExplorer::Kit* kitByName(const QString& name);
     QModelIndex m_selectedKitIdx;
 };
 
