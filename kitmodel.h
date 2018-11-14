@@ -42,8 +42,11 @@ public:
 
 private:
     ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;
+    QModelIndex indexFromKit(ProjectExplorer::Kit* kit) const;
     QString findUnusedName(const QString& prefix);
     ProjectExplorer::Kit* kitByName(const QString& name);
+    void modelLayoutChanged();
+
     QModelIndex m_selectedKitIdx;
 };
 

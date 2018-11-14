@@ -20,7 +20,9 @@ void RemoteSystemOptionsForm::handleSelectedKitChanged()
     ui->wg_ClientArea->setEnabled(hasKit);
     if(hasKit) {
         ProjectExplorer::Kit* kit = m_kitModel->kitModel().selectedKit();
-        ui->le_Name->setText(kit->displayName());
+        if(ui->le_Name->text() != kit->displayName()) {
+            ui->le_Name->setText(kit->displayName());
+        }
     } else {
         ui->le_Name->setText("");
     }

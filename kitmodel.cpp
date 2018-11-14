@@ -10,14 +10,15 @@ KitModel::KitModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_selectedKitIdx()
 {
-    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitsChanged, [=](){
-        int oldIdx = m_selectedKitIdx.row();
-        this->beginResetModel();
-        this->endResetModel();
-        if(oldIdx < 0 && rowCount(QModelIndex()) > 0) {
-            oldIdx = 0;
-        }
-        this->setSelectedKitIdx(index(oldIdx, 0));
+    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitAdded, [=](){
+        modelLayoutChanged();
+    });
+    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitRemoved, [=](){
+        modelLayoutChanged();
+    });
+    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitUpdated, [=](ProjectExplorer::Kit* kit){
+        QModelIndex idx = indexFromKit(kit);
+        this->dataChanged(idx, idx);
     });
 }
 
@@ -59,6 +60,20 @@ ProjectExplorer::Kit *KitModel::kitFromIndex(const QModelIndex &index) const
         }
     }
     return kit;
+}
+
+QModelIndex KitModel::indexFromKit(ProjectExplorer::Kit *kit) const
+{
+    QModelIndex retval;
+    int i = 0;
+    for(ProjectExplorer::Kit* tmp_kit : ProjectExplorer::KitManager::instance()->kits()) {
+        if(tmp_kit == kit) {
+            retval = index(i, 0);
+            break;
+        }
+        ++i;
+    }
+    return retval;
 }
 
 QString KitModel::findUnusedName(const QString &prefix)
@@ -126,6 +141,17 @@ QVariant KitModel::data(const QModelIndex &index, int role) const
         }
     }
     return retval;
+}
+
+void KitModel::modelLayoutChanged()
+{
+    int oldIdx = m_selectedKitIdx.row();
+    this->beginResetModel();
+    this->endResetModel();
+    if(oldIdx < 0 && rowCount(QModelIndex()) > 0) {
+        oldIdx = 0;
+    }
+    this->setSelectedKitIdx(index(oldIdx, 0));
 }
 
 }
