@@ -2,6 +2,7 @@
 #include "ui_remotesystemoptionsform.h"
 #include <projectexplorer/devicesupport/devicemanagermodel.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
+#include <projectexplorer/kit.h>
 #include <kitmodel.h>
 
 
@@ -12,17 +13,26 @@ namespace Internal {
 
 void RemoteSystemOptionsForm::handleSelectedKitChanged()
 {
+    m_inDataBinding = true;
     ui->cb_Kits->setCurrentIndex(m_kitModel->selectedKitIdx().row());
     bool hasKit = m_kitModel->selectedKitIdx().isValid();
     ui->pb_Delete->setEnabled(hasKit);
     ui->wg_ClientArea->setEnabled(hasKit);
+    if(hasKit) {
+        ProjectExplorer::Kit* kit = m_kitModel->kitModel().selectedKit();
+        ui->le_Name->setText(kit->displayName());
+    } else {
+        ui->le_Name->setText("");
+    }
+    m_inDataBinding = false;
 }
 
 RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RemoteSystemOptionsForm),
     m_deviceModel(new ProjectExplorer::DeviceManagerModel(ProjectExplorer::DeviceManager::instance(), this)),
-    m_kitModel(new RemoteCompile::Internal::RemoteKitFilterModel)
+    m_kitModel(new RemoteCompile::Internal::RemoteKitFilterModel),
+    m_inDataBinding(false)
 {
     ui->setupUi(this);
     ui->cb_Kits->setModel(m_kitModel.get());
@@ -44,6 +54,15 @@ RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
 
     connect(ui->pb_Delete, &QPushButton::clicked, [=](){
        m_kitModel->kitModel().deleteSelectedKit();
+    });
+
+    connect(ui->le_Name, &QLineEdit::textChanged, [=]{
+        if(!m_inDataBinding) {
+            ProjectExplorer::Kit* kit = m_kitModel->kitModel().selectedKit();
+            if(kit) {
+                kit->setUnexpandedDisplayName(ui->le_Name->text());
+            }
+        }
     });
 }
 
