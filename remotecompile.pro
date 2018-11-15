@@ -16,7 +16,8 @@ SOURCES += \
     remotecompilermanagermodel.cpp \
     remotecompiler.cpp \
     kitmodel.cpp \
-    remotekitfiltermodel.cpp
+    remotekitfiltermodel.cpp \
+    devicefiltermodel.cpp
 
 HEADERS += \
         remotecompileplugin.h \
@@ -32,7 +33,8 @@ HEADERS += \
     remotecompilermanagermodel.h \
     remotecompiler.h \
     kitmodel.h \
-    remotekitfiltermodel.h
+    remotekitfiltermodel.h \
+    devicefiltermodel.h
 
 OTHER_FILES += \
     RemoteCompile.json.in

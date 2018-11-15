@@ -3,11 +3,8 @@
 
 #include <QWidget>
 #include <remotekitfiltermodel.h>
+#include <devicefiltermodel.h>
 #include <memory>
-
-namespace ProjectExplorer {
-    class DeviceManagerModel;
-}
 
 namespace Ui {
 class RemoteSystemOptionsForm;
@@ -28,7 +25,7 @@ public:
 
 private:
     Ui::RemoteSystemOptionsForm *ui;
-    std::shared_ptr<ProjectExplorer::DeviceManagerModel> m_deviceModel;
+    std::shared_ptr<RemoteCompile::Internal::DeviceFilterModel> m_deviceModel;
     std::shared_ptr<RemoteCompile::Internal::RemoteKitFilterModel> m_kitModel;
     bool m_inDataBinding;
     void handleSelectedKitChanged();

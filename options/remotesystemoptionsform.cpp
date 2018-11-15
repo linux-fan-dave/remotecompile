@@ -23,8 +23,10 @@ void RemoteSystemOptionsForm::handleSelectedKitChanged()
         if(ui->le_Name->text() != kit->displayName()) {
             ui->le_Name->setText(kit->displayName());
         }
+        ui->cb_Device->setModel(m_deviceModel.get());
     } else {
         ui->le_Name->setText("");
+        ui->cb_Device->setModel(nullptr);
     }
     m_inDataBinding = false;
 }
@@ -32,13 +34,12 @@ void RemoteSystemOptionsForm::handleSelectedKitChanged()
 RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RemoteSystemOptionsForm),
-    m_deviceModel(new ProjectExplorer::DeviceManagerModel(ProjectExplorer::DeviceManager::instance(), this)),
+    m_deviceModel(new RemoteCompile::Internal::DeviceFilterModel),
     m_kitModel(new RemoteCompile::Internal::RemoteKitFilterModel),
     m_inDataBinding(false)
 {
     ui->setupUi(this);
     ui->cb_Kits->setModel(m_kitModel.get());
-    //ui->comboBox->setModel(m_deviceModel.get());
 
     handleSelectedKitChanged();
 
@@ -65,6 +66,9 @@ RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
                 kit->setUnexpandedDisplayName(ui->le_Name->text());
             }
         }
+    });
+    connect(ui->pb_manageDevices, &QPushButton::clicked, [=]() {
+
     });
 }
 
