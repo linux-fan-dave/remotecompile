@@ -8,6 +8,7 @@ namespace Internal {
 
 RemoteSystemOptions::RemoteSystemOptions(QObject *parent)
     :Core::IOptionsPage(parent)
+    ,m_deviceModel(new RemoteCompile::Internal::DeviceFilterModel)
 {
     setId(Core::Id(Constants::REMOTECOMPILE_OPTIONS_ID));
     setDisplayName(tr("Remote Compile Settings"));
@@ -23,7 +24,7 @@ RemoteSystemOptions::RemoteSystemOptions(QObject *parent)
 
 QWidget *RemoteSystemOptions::widget()
 {
-    return new RemoteSystemOptionsForm();
+    return new RemoteSystemOptionsForm(*this);
 }
 
 void RemoteSystemOptions::apply()
@@ -34,6 +35,11 @@ void RemoteSystemOptions::apply()
 void RemoteSystemOptions::finish()
 {
 
+}
+
+std::shared_ptr<RemoteCompile::Internal::DeviceFilterModel> RemoteSystemOptions::deviceModel() const
+{
+    return m_deviceModel;
 }
 
 }

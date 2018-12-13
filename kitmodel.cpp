@@ -123,8 +123,6 @@ ProjectExplorer::Kit *KitModel::selectedKit() const
 
 QVariant KitModel::data(const QModelIndex &index, int role) const
 {
-    Q_UNUSED(index)
-
     QVariant retval;
     ProjectExplorer::Kit* kit = kitFromIndex(index);
     if(kit) {
@@ -137,6 +135,24 @@ QVariant KitModel::data(const QModelIndex &index, int role) const
             break;
         case DataRole_IsRemoteRole:
             retval = kit->value(Constants::KIT_IS_REMOTE_ID, false);
+            break;
+        case DataRole_DeviceId:
+            retval = kit->value(Constants::KIT_DEVICE_ID, false);
+            break;
+        }
+    }
+    return retval;
+}
+
+bool KitModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool retval = false;
+    ProjectExplorer::Kit* kit = kitFromIndex(index);
+    if(kit) {
+        switch (role) {
+        case DataRole_DeviceId:
+            kit->setValue(Constants::KIT_DEVICE_ID, value);
+            retval = true;
             break;
         }
     }

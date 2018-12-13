@@ -3,6 +3,7 @@
 #include <projectexplorer/devicesupport/devicemanagermodel.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
 #include <projectexplorer/kit.h>
+#include "remotesystemoptions.h"
 #include <kitmodel.h>
 
 
@@ -23,7 +24,7 @@ void RemoteSystemOptionsForm::handleSelectedKitChanged()
         if(ui->le_Name->text() != kit->displayName()) {
             ui->le_Name->setText(kit->displayName());
         }
-        ui->cb_Device->setModel(m_deviceModel.get());
+        ui->cb_Device->setModel(m_remoteSystemOptions.deviceModel().get());
     } else {
         ui->le_Name->setText("");
         ui->cb_Device->setModel(nullptr);
@@ -31,11 +32,11 @@ void RemoteSystemOptionsForm::handleSelectedKitChanged()
     m_inDataBinding = false;
 }
 
-RemoteSystemOptionsForm::RemoteSystemOptionsForm(QWidget *parent) :
-    QWidget(parent),
+RemoteSystemOptionsForm::RemoteSystemOptionsForm(RemoteSystemOptions &remoteSystemOptions) :
+    QWidget(),
     ui(new Ui::RemoteSystemOptionsForm),
-    m_deviceModel(new RemoteCompile::Internal::DeviceFilterModel),
     m_kitModel(new RemoteCompile::Internal::RemoteKitFilterModel),
+    m_remoteSystemOptions(remoteSystemOptions),
     m_inDataBinding(false)
 {
     ui->setupUi(this);

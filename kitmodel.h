@@ -17,7 +17,8 @@ class KitModel : public QAbstractListModel
 public:
     enum DataRole {
         DataRole_IsRemoteRole = Qt::UserRole + 1,
-        DataRole_Kit
+        DataRole_Kit,
+        DataRole_DeviceId
     };
     Q_ENUM(DataRole)
 
@@ -39,6 +40,7 @@ public slots:
 public:
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 private:
     ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;

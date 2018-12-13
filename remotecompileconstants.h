@@ -17,6 +17,7 @@ const char TOOLCHAIN_ID[] = "RemoteCompile.ToolChain";
 const char INNERTOOLCHAIN_ID[] = "RemoteCompile.InnerToolChain";
 
 const char KIT_IS_REMOTE_ID[] = "RemoteCompile.IsRemote";
+const char KIT_DEVICE_ID[] = "RemoteCompile.Device";
 
 } // namespace RemoteCompile
 } // namespace Constants
