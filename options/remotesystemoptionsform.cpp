@@ -2,7 +2,9 @@
 #include "ui_remotesystemoptionsform.h"
 #include <projectexplorer/devicesupport/devicemanagermodel.h>
 #include <projectexplorer/devicesupport/devicemanager.h>
+#include <coreplugin/icore.h>
 #include <projectexplorer/kit.h>
+#include <projectexplorer/projectexplorerconstants.h>
 #include "remotesystemoptions.h"
 #include <kitmodel.h>
 
@@ -69,7 +71,7 @@ RemoteSystemOptionsForm::RemoteSystemOptionsForm(RemoteSystemOptions &remoteSyst
         }
     });
     connect(ui->pb_manageDevices, &QPushButton::clicked, [=]() {
-
+        Core::ICore::showOptionsDialog(ProjectExplorer::Constants::DEVICE_SETTINGS_PAGE_ID, this);
     });
 }
 
