@@ -2,6 +2,7 @@
 #include <projectexplorer/kitmodel.h>
 #include <projectexplorer/kitmanager.h>
 #include "remotecompileconstants.h"
+#include <memory>
 
 namespace RemoteCompile {
 namespace Internal {
@@ -30,7 +31,7 @@ void KitModel::addNewRemoteKit()
     kit->setAutoDetectionSource("remoteCompilerPlugin");
     kit->makeSticky();
     kit->setUnexpandedDisplayName(findUnusedName("RemoteCompilerKit"));
-    ProjectExplorer::KitManager::instance()->registerKit(kit);
+    ProjectExplorer::KitManager::instance()->registerKit(std::unique_ptr<ProjectExplorer::Kit>(kit));
 }
 
 void KitModel::deleteSelectedKit()

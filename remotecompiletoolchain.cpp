@@ -32,34 +32,14 @@ bool RemoteCompileToolchain::isValid() const
     return true;
 }
 
-ProjectExplorer::ToolChain::CompilerFlags RemoteCompileToolchain::compilerFlags(const QStringList &cxxflags) const
-{
-    return m_innerToolChain->compilerFlags(cxxflags);
-}
-
 ProjectExplorer::WarningFlags RemoteCompileToolchain::warningFlags(const QStringList &cflags) const
 {
     return m_innerToolChain->warningFlags(cflags);
 }
 
-ProjectExplorer::ToolChain::PredefinedMacrosRunner RemoteCompileToolchain::createPredefinedMacrosRunner() const
-{
-    return m_innerToolChain->createPredefinedMacrosRunner();
-}
-
 ProjectExplorer::Macros RemoteCompileToolchain::predefinedMacros(const QStringList &cxxflags) const
 {
     return m_innerToolChain->predefinedMacros(cxxflags);
-}
-
-ProjectExplorer::ToolChain::SystemHeaderPathsRunner RemoteCompileToolchain::createSystemHeaderPathsRunner() const
-{
-   return m_innerToolChain->createSystemHeaderPathsRunner();
-}
-
-QList<ProjectExplorer::HeaderPath> RemoteCompileToolchain::systemHeaderPaths(const QStringList &cxxflags, const Utils::FileName &sysRoot) const
-{
-    return m_innerToolChain->systemHeaderPaths(cxxflags, sysRoot);
 }
 
 void RemoteCompileToolchain::addToEnvironment(Utils::Environment &env) const
@@ -82,11 +62,6 @@ ProjectExplorer::IOutputParser *RemoteCompileToolchain::outputParser() const
     return m_innerToolChain->outputParser();
 }
 
-ProjectExplorer::ToolChainConfigWidget *RemoteCompileToolchain::configurationWidget()
-{
-    return m_innerToolChain->configurationWidget();
-}
-
 ProjectExplorer::ToolChain *RemoteCompileToolchain::clone() const
 {
     return nullptr;
@@ -95,6 +70,31 @@ ProjectExplorer::ToolChain *RemoteCompileToolchain::clone() const
 QList<ProjectExplorer::Task> RemoteCompileToolchain::validateKit(const ProjectExplorer::Kit *k) const
 {
     return m_innerToolChain->validateKit(k);
+}
+
+ProjectExplorer::LanguageExtensions RemoteCompileToolchain::languageExtensions(const QStringList &cxxflags) const
+{
+    return m_innerToolChain->languageExtensions(cxxflags);
+}
+
+ProjectExplorer::ToolChain::MacroInspectionRunner RemoteCompileToolchain::createMacroInspectionRunner() const
+{
+    return m_innerToolChain->createMacroInspectionRunner();
+}
+
+ProjectExplorer::ToolChain::BuiltInHeaderPathsRunner RemoteCompileToolchain::createBuiltInHeaderPathsRunner() const
+{
+    return m_innerToolChain->createBuiltInHeaderPathsRunner();
+}
+
+ProjectExplorer::HeaderPaths RemoteCompileToolchain::builtInHeaderPaths(const QStringList &cxxflags, const Utils::FileName &sysRoot) const
+{
+    return m_innerToolChain->builtInHeaderPaths(cxxflags, sysRoot);
+}
+
+std::unique_ptr<ProjectExplorer::ToolChainConfigWidget> RemoteCompileToolchain::createConfigurationWidget()
+{
+    return m_innerToolChain->createConfigurationWidget();
 }
 
 QList<ProjectExplorer::Abi> RemoteCompileToolchain::supportedAbis() const
