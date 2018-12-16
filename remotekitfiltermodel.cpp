@@ -15,7 +15,9 @@ RemoteKitFilterModel::RemoteKitFilterModel(QObject *parent)
 
 bool RemoteKitFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-    return m_kitModel->index(source_row, 0, source_parent).data(KitModel::DataRole_IsRemoteRole).toBool();
+    QModelIndex idx = m_kitModel->index(source_row, 0, source_parent);
+    return idx.data(KitModel::DataRole_IsRemoteRole).toBool()
+            && ! idx.data(KitModel::DataRole_Deleted).toBool();
 }
 
 KitModel &RemoteKitFilterModel::kitModel() const

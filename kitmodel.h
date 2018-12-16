@@ -2,6 +2,7 @@
 #define KITMODEL_H
 
 #include <QAbstractListModel>
+#include <memory>
 
 namespace ProjectExplorer {
    class Kit;
@@ -18,7 +19,8 @@ public:
     enum DataRole {
         DataRole_IsRemoteRole = Qt::UserRole + 1,
         DataRole_Kit,
-        DataRole_DeviceId
+        DataRole_DeviceId,
+        DataRole_Deleted
     };
     Q_ENUM(DataRole)
 
@@ -43,13 +45,17 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
 
 private:
-    ProjectExplorer::Kit* kitFromIndex(const QModelIndex &index) const;
-    QModelIndex indexFromKit(ProjectExplorer::Kit* kit) const;
+    typedef std::shared_ptr<ProjectExplorer::Kit> KitPtr;
+    typedef QList<KitPtr> KitList;
+
+    KitPtr kitFromIndex(const QModelIndex &index) const;
     QString findUnusedName(const QString& prefix);
-    ProjectExplorer::Kit* kitByName(const QString& name);
+    QModelIndex kitByName(const QString& name);
     void modelLayoutChanged();
 
     QModelIndex m_selectedKitIdx;
+    KitList m_changedKits;
+    KitList m_newKits;
 };
 
 }

@@ -10,71 +10,65 @@ namespace Internal {
 KitModel::KitModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_selectedKitIdx()
+    , m_changedKits()
 {
-    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitAdded, [=](){
-        modelLayoutChanged();
-    });
-    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitRemoved, [=](){
-        modelLayoutChanged();
-    });
-    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitUpdated, [=](ProjectExplorer::Kit* kit){
-        QModelIndex idx = indexFromKit(kit);
-        this->dataChanged(idx, idx);
-    });
+//    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitAdded, [=](){
+//        modelLayoutChanged();
+//    });
+//    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitRemoved, [=](){
+//        modelLayoutChanged();
+//    });
+//    connect(ProjectExplorer::KitManager::instance(), &ProjectExplorer::KitManager::kitUpdated, [=](ProjectExplorer::Kit* kit){
+//        QModelIndex idx = indexFromKit(kit);
+//        this->dataChanged(idx, idx);
+//    });
+    QList<ProjectExplorer::Kit*> kitList =  ProjectExplorer::KitManager::instance()->kits();
+    for(ProjectExplorer::Kit* kit : kitList) {
+        m_changedKits.push_back(KitPtr(kit->clone(true)));
+    }
+
 }
 
 void KitModel::addNewRemoteKit()
 {
-    ProjectExplorer::Kit* kit = new ProjectExplorer::Kit();
+    KitPtr kit = KitPtr(new ProjectExplorer::Kit());
     kit->setValue(Constants::KIT_IS_REMOTE_ID, true);
     kit->setAutoDetected(true);
     kit->setAutoDetectionSource("remoteCompilerPlugin");
     kit->makeSticky();
     kit->setUnexpandedDisplayName(findUnusedName("RemoteCompilerKit"));
-    ProjectExplorer::KitManager::instance()->registerKit(std::unique_ptr<ProjectExplorer::Kit>(kit));
+    int rows = rowCount(QModelIndex());
+    beginInsertRows(QModelIndex(), rows, rows);
+    m_changedKits.append(kit);
+    endInsertRows();
+    setSelectedKitIdx(index(rows, 0));
 }
 
 void KitModel::deleteSelectedKit()
 {
-    ProjectExplorer::Kit* kit = selectedKit();
-    if(kit) {
-        ProjectExplorer::KitManager::instance()->deregisterKit(kit);
-    }
+    setData(selectedKitIdx(), true, DataRole_Deleted);
 }
 
 int KitModel::rowCount(const QModelIndex &parent) const
 {
     int retval = 0;
     if(!parent.isValid()) {
-        retval = ProjectExplorer::KitManager::instance()->kits().size();
+        retval = m_changedKits.size() + m_newKits.size();
     }
     return retval;
 }
 
-ProjectExplorer::Kit *KitModel::kitFromIndex(const QModelIndex &index) const
+KitModel::KitPtr KitModel::kitFromIndex(const QModelIndex &index) const
 {
-    ProjectExplorer::Kit* kit = nullptr;
+    KitPtr kit;
     if(!index.parent().isValid() && index.isValid()) {
-        QList<ProjectExplorer::Kit*> kitList =  ProjectExplorer::KitManager::instance()->kits();
-        if(index.row() <= kitList.size()) {
-            kit = kitList[index.row()];
+        if(index.row() <= m_changedKits.size()) {
+            kit = m_changedKits[index.row()];
+        } else if(index.row() - m_changedKits.size() < m_newKits.size()) {
+            kit = m_newKits[index.row() - m_changedKits.size()];
         }
     }
     return kit;
-}
-
-QModelIndex KitModel::indexFromKit(ProjectExplorer::Kit *kit) const
-{
-    QModelIndex retval;
-    int i = 0;
-    for(ProjectExplorer::Kit* tmp_kit : ProjectExplorer::KitManager::instance()->kits()) {
-        if(tmp_kit == kit) {
-            retval = index(i, 0);
-            break;
-        }
-        ++i;
-    }
-    return retval;
 }
 
 QString KitModel::findUnusedName(const QString &prefix)
@@ -86,25 +80,25 @@ QString KitModel::findUnusedName(const QString &prefix)
         } else {
             retval = QString("%1_%2").arg(prefix).arg(i);
         }
-        if(!kitByName(retval)) {
+        if(!kitByName(retval).isValid()) {
             break;
         }
     }
     return retval;
 }
 
-ProjectExplorer::Kit *KitModel::kitByName(const QString &name)
+QModelIndex KitModel::kitByName(const QString &name)
 {
-    ProjectExplorer::Kit* kit = nullptr;
+    QModelIndex retval;
     const int rowCnt = rowCount(QModelIndex());
     for(int i = 0; i < rowCnt; ++i) {
         QModelIndex idx = index(i, 0);
         if(idx.data().toString() == name) {
-            kit = kitFromIndex(idx);
+            retval = idx;
             break;
         }
     }
-    return kit;
+    return retval;
 }
 
 void KitModel::setSelectedKitIdx(const QModelIndex &idx)
@@ -125,20 +119,23 @@ ProjectExplorer::Kit *KitModel::selectedKit() const
 QVariant KitModel::data(const QModelIndex &index, int role) const
 {
     QVariant retval;
-    ProjectExplorer::Kit* kit = kitFromIndex(index);
+    KitPtr kit = kitFromIndex(index);
     if(kit) {
         switch (role) {
         case Qt::DisplayRole:
             retval = kit->displayName();
             break;
         case DataRole_Kit:
-            retval = QVariant::fromValue(kit);
+            retval = QVariant::fromValue(kit.get());
             break;
         case DataRole_IsRemoteRole:
             retval = kit->value(Constants::KIT_IS_REMOTE_ID, false);
             break;
         case DataRole_DeviceId:
             retval = kit->value(Constants::KIT_DEVICE_ID, false);
+            break;
+        case DataRole_Deleted:
+            retval = kit->value(Constants::KIT_DELETED, false);
             break;
         }
     }
@@ -148,14 +145,21 @@ QVariant KitModel::data(const QModelIndex &index, int role) const
 bool KitModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     bool retval = false;
-    ProjectExplorer::Kit* kit = kitFromIndex(index);
+    KitPtr kit = kitFromIndex(index);
     if(kit) {
         switch (role) {
         case DataRole_DeviceId:
             kit->setValue(Constants::KIT_DEVICE_ID, value);
             retval = true;
             break;
+        case DataRole_Deleted:
+            kit->setValue(Constants::KIT_DELETED, value);
+            retval = true;
+            break;
         }
+    }
+    if(retval) {
+        dataChanged(index, index);
     }
     return retval;
 }
