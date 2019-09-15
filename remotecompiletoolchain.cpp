@@ -9,9 +9,9 @@
 namespace RemoteCompile {
 namespace Internal {
 
-RemoteCompileToolchain::RemoteCompileToolchain(ProjectExplorer::ToolChain::Detection detection)
-    :ProjectExplorer::ToolChain(Constants::TOOLCHAIN_ID, detection)
-    ,m_innerToolChain(new ProjectExplorer::GccToolChain(Constants::INNERTOOLCHAIN_ID, detection))
+RemoteCompileToolchain::RemoteCompileToolchain()
+    :ProjectExplorer::ToolChain(Constants::TOOLCHAIN_ID)
+    ,m_innerToolChain(new ProjectExplorer::GccToolChain(Constants::INNERTOOLCHAIN_ID))
 {
     setLanguage(ProjectExplorer::Constants::CXX_LANGUAGE_ID);
     setDisplayName("jdsf");
@@ -47,7 +47,7 @@ void RemoteCompileToolchain::addToEnvironment(Utils::Environment &env) const
     Q_UNUSED(env);
 }
 
-QString RemoteCompileToolchain::makeCommand(const Utils::Environment &env) const
+Utils::FileName RemoteCompileToolchain::makeCommand(const Utils::Environment &env) const
 {
     return m_innerToolChain->makeCommand(env);
 }
@@ -62,12 +62,7 @@ ProjectExplorer::IOutputParser *RemoteCompileToolchain::outputParser() const
     return m_innerToolChain->outputParser();
 }
 
-ProjectExplorer::ToolChain *RemoteCompileToolchain::clone() const
-{
-    return nullptr;
-}
-
-QList<ProjectExplorer::Task> RemoteCompileToolchain::validateKit(const ProjectExplorer::Kit *k) const
+QVector<ProjectExplorer::Task> RemoteCompileToolchain::validateKit(const ProjectExplorer::Kit *k) const
 {
     return m_innerToolChain->validateKit(k);
 }
@@ -97,9 +92,9 @@ std::unique_ptr<ProjectExplorer::ToolChainConfigWidget> RemoteCompileToolchain::
     return m_innerToolChain->createConfigurationWidget();
 }
 
-QList<ProjectExplorer::Abi> RemoteCompileToolchain::supportedAbis() const
+QVector<ProjectExplorer::Abi> RemoteCompileToolchain::supportedAbis() const
 {
-    return QList<ProjectExplorer::Abi> ();
+    return QVector<ProjectExplorer::Abi> ();
 }
 
 QStringList RemoteCompileToolchain::extraCodeModelFlags() const

@@ -11,6 +11,8 @@ RemoteCompilerToolChainFactory::RemoteCompilerToolChainFactory()
     :ProjectExplorer::ToolChainFactory()
 {
     setDisplayName("remote compiler factory");
+    setSupportedLanguages({ProjectExplorer::Constants::CXX_LANGUAGE_ID,
+                           ProjectExplorer::Constants::C_LANGUAGE_ID});
 }
 
 QList<ProjectExplorer::ToolChain *> RemoteCompilerToolChainFactory::autoDetect(const QList<ProjectExplorer::ToolChain *> &alreadyKnown)
@@ -24,22 +26,16 @@ QList<ProjectExplorer::ToolChain *> RemoteCompilerToolChainFactory::autoDetect(c
         tcs << autoDetectRemoteGcc(alreadyKnown, dev);
     }
 
-    RemoteCompileToolchain* toolchain = new RemoteCompileToolchain(ProjectExplorer::ToolChain::AutoDetectionFromSettings);
+    RemoteCompileToolchain* toolchain = new RemoteCompileToolchain();
     Q_UNUSED(toolchain);
     return tcs;
-}
-
-QSet<Core::Id> RemoteCompilerToolChainFactory::supportedLanguages() const
-{
-    return {ProjectExplorer::Constants::CXX_LANGUAGE_ID,
-                ProjectExplorer::Constants::C_LANGUAGE_ID};
 }
 
 QList<ProjectExplorer::ToolChain *> RemoteCompilerToolChainFactory::autoDetectRemoteGcc(const QList<ProjectExplorer::ToolChain *> &/*alreadyKnown*/, ProjectExplorer::IDevice::ConstPtr /*device*/)
 {
     using namespace ProjectExplorer;
     QList<ToolChain *> tcs;
-    tcs.append(new RemoteCompileToolchain(ProjectExplorer::ToolChain::AutoDetection));
+    tcs.append(new RemoteCompileToolchain());
 
 //    QList<ToolChain *> known = alreadyKnown;
 

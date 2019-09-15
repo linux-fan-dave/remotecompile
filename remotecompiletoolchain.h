@@ -10,7 +10,7 @@ namespace Internal {
 class RemoteCompileToolchain : public ProjectExplorer::ToolChain
 {
 public:
-    RemoteCompileToolchain(Detection detection);
+    RemoteCompileToolchain();
 
     // ToolChain interface
 public:
@@ -20,11 +20,10 @@ public:
     virtual ProjectExplorer::WarningFlags warningFlags(const QStringList &cflags) const override;
     virtual ProjectExplorer::Macros predefinedMacros(const QStringList &cxxflags) const override;
     virtual void addToEnvironment(Utils::Environment &env) const override;
-    virtual QString makeCommand(const Utils::Environment &env) const override;
+    virtual Utils::FileName makeCommand(const Utils::Environment &env) const override;
     virtual Utils::FileName compilerCommand() const override;
     virtual ProjectExplorer::IOutputParser *outputParser() const override;
-    virtual ProjectExplorer::ToolChain *clone() const override;
-    virtual QList<ProjectExplorer::Task> validateKit(const ProjectExplorer::Kit *k) const override;
+    virtual QVector<ProjectExplorer::Task> validateKit(const ProjectExplorer::Kit *k) const override;
     virtual Utils::LanguageExtensions languageExtensions(const QStringList &cxxflags) const override;
     virtual MacroInspectionRunner createMacroInspectionRunner() const override;
     virtual BuiltInHeaderPathsRunner createBuiltInHeaderPathsRunner() const override;
@@ -37,7 +36,7 @@ private:
 
     // ToolChain interface
 public:
-    virtual QList<ProjectExplorer::Abi> supportedAbis() const override;
+    virtual QVector<ProjectExplorer::Abi> supportedAbis() const override;
     virtual QStringList extraCodeModelFlags() const override;
 };
 
