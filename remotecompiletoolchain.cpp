@@ -72,7 +72,7 @@ QList<ProjectExplorer::Task> RemoteCompileToolchain::validateKit(const ProjectEx
     return m_innerToolChain->validateKit(k);
 }
 
-ProjectExplorer::LanguageExtensions RemoteCompileToolchain::languageExtensions(const QStringList &cxxflags) const
+Utils::LanguageExtensions RemoteCompileToolchain::languageExtensions(const QStringList &cxxflags) const
 {
     return m_innerToolChain->languageExtensions(cxxflags);
 }

@@ -25,7 +25,7 @@ public:
     virtual ProjectExplorer::IOutputParser *outputParser() const override;
     virtual ProjectExplorer::ToolChain *clone() const override;
     virtual QList<ProjectExplorer::Task> validateKit(const ProjectExplorer::Kit *k) const override;
-    virtual ProjectExplorer::LanguageExtensions languageExtensions(const QStringList &cxxflags) const override;
+    virtual Utils::LanguageExtensions languageExtensions(const QStringList &cxxflags) const override;
     virtual MacroInspectionRunner createMacroInspectionRunner() const override;
     virtual BuiltInHeaderPathsRunner createBuiltInHeaderPathsRunner() const override;
     virtual ProjectExplorer::HeaderPaths builtInHeaderPaths(const QStringList &cxxflags,
